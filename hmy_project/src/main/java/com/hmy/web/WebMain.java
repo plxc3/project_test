@@ -11,6 +11,7 @@ import org.springframework.context.annotation.ComponentScan;
 @EnableDiscoveryClient
 @MapperScan("com.hmy.web.mapper")
 @ComponentScan(basePackages = {"com.plxcc","com.hmy"})
+@EnableCaching
 public class WebMain
 {
     public static void main(String[] args)
