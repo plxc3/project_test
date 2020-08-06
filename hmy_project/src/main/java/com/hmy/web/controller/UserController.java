@@ -8,11 +8,10 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
-
-import springfox.documentation.annotations.Cacheable;
 
 import javax.annotation.Resource;
 import java.util.Map;
@@ -49,7 +48,7 @@ public class UserController
      * @param user
      * @return
      */
-    @CachePut(value = "userspace")
+    @CacheEvict(value = "userspace" ,allEntries=true)
     @PostMapping("/insert")
     @ApiOperation(value = "插入方法", tags = {"user"})
     public Result insert(@RequestBody User user)
