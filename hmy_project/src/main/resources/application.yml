@@ -13,7 +13,7 @@ spring:
         max-active: 20
         max-wait: 1
   application:
-    name: service-test-9001
+    name: service-test-9002
   profiles:
     active: dev
   datasource:

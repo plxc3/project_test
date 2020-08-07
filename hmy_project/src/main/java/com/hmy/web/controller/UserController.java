@@ -11,6 +11,8 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 
 /**
  * <p>
@@ -30,7 +32,6 @@ public class UserController
 
     /**
      *只缓存一个列表，所以key值使用默认规则
-     * todo 可用#{'字符串'}? 待测试
      */
     @Cacheable(value = "userListSpace")
     @GetMapping("/get")
@@ -49,10 +50,16 @@ public class UserController
     @CacheEvict(value = "userListSpace",allEntries = true)
     @PostMapping("/insert")
     @ApiOperation(value = "插入一个用户", tags = {"user"})
-    public Result insert(@RequestBody User user)
+    public Result insert(@RequestBody @Valid User user)
     {
-        userService.save(user);
-        return Result.success().setData("data", user).setMsg("保存成功");
+        boolean save = userService.save(user);
+        if (save){
+            return Result.success()
+                    .setData("data", user)
+                    .setMsg("保存成功");
+        }
+        return Result.fail()
+            .setMsg("保存失败");
     }
 
     @Cacheable(value = "userspace",key = "#id")
@@ -62,9 +69,12 @@ public class UserController
     {
         User user = userService.getById(id);
         if (user!=null){
-            return Result.success().setMsg("获取成功").setData("user",user);
+            return Result.success()
+                    .setMsg("获取成功")
+                    .setData("user",user);
         }
-        return Result.fail();
+        return Result.fail()
+                .setMsg("用户不存在");
     }
 
     /**
@@ -75,13 +85,14 @@ public class UserController
             @CacheEvict(value = "userListSpace",allEntries = true)})
     @PostMapping("/updateUser")
     @ApiOperation(value = "更新用户", tags = {"user"})
-    public Result updateUser(@RequestBody User user)
+    public Result updateUser(@RequestBody @Valid User user)
     {
         boolean update = userService.update(user, null);
         if (update){
             return Result.success().setMsg("更新成功");
         }
-        return Result.fail();
+        return Result.fail()
+                .setMsg("更新失败");
     }
 }
 

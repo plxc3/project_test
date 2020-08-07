@@ -3,6 +3,7 @@ package com.plxcc.servicebase.handler;
 import com.plxcc.servicebase.common.Result;
 import com.plxcc.servicebase.utils.ZTException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -49,6 +50,13 @@ public class GlobalExceptionHandler {
     public Result error(ZTException e){
         e.printStackTrace();
         return Result.fail().setMsg(e.getMsg()+e.getCode());
+    }
+
+    //数据校验不合法
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseBody
+    public Result error(MethodArgumentNotValidException e){
+        return Result.fail().setMsg("数据不合法");
     }
 }
 
